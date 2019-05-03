@@ -18,6 +18,7 @@ const [
   errorFetchingData,
   toggleSidePanel,
   toggleDataInfo,
+  onAdminSelect,
 ] = [
   ActionTypes.NOOP,
   ActionTypes.COUNTRY_SELECT,
@@ -27,13 +28,48 @@ const [
   ActionTypes.ERROR_FETCHING_DATA,
   ActionTypes.TOGGLE_SIDE_PANEL,
   ActionTypes.TOGGLE_DATA_INFO,
+  ActionTypes.ADMIN_SELECT,
 ].map(action => createAction(action));
 
+// Set visible layers by id
+const setVisibleLayers = visibleLayersIds => (dispatch, getState) => {
+  const state = getState();
+
+  // Check if map is already defined
+  if (!(state.keplerGl
+      && state.keplerGl.map
+      && state.keplerGl.map.visState
+      && state.keplerGl.map.visState.layers)) {
+    return dispatch(noop());
+  }
+
+  const {
+    keplerGl: {
+      map: {
+        visState: {
+          layers,
+        },
+      },
+    },
+  } = state;
+
+  const allUniqueVisibleLayers = new Set(visibleLayersIds);
+
+  layers.forEach((layer) => {
+    const isVisible = allUniqueVisibleLayers.has(layer.id);
+    dispatch(layerConfigChange(layer, { isVisible }));
+    console.log('layer id is ', layer.id, 'the type is ', layer.type);
+  });
+
+  return dispatch(noop());
+
+
+};
 // On country click action
 const onCountryClick = info => (dispatch, getState) => {
   // dispatch usual kepler.gl action
   dispatch(onLayerClick(info));
-
+  // dispatch(setVisibleLayers(["c75j49m"]));
   // if the user clicked in a object with properties
   if (info && info.object && info.object.properties && info.object.properties.url) {
     // dispatch country select action
@@ -48,6 +84,16 @@ const onCountryClick = info => (dispatch, getState) => {
   return noop();
 };
 
+// On admin click action
+const onAdminClick = info => (dispatch, getState) => {
+  dispatch(onLayerClick(info));
+  if (info && info.object && info.object.properties && info.object.properties.url) {
+    dispatch(onAdminSelect(info.object.properties));
+    const { app: { data } } = getState();
+    console.log('we are testing admin clicks: ', data.path);
+  }
+  return noop();
+};
 // Load data action
 const loadData = (dataset = null, path = null) => ((dispatch, getState) => {
   // Initialize fetching state
@@ -59,7 +105,7 @@ const loadData = (dataset = null, path = null) => ((dispatch, getState) => {
 
   // eslint-disable-next-line
   console.log('Getting data from:', url);
-
+  console.log('Hello from Russia');
   // Fetch data from url
   return fetch(url)
     .then((response) => {
@@ -140,44 +186,14 @@ const onZoomLevelChange = () => (dispatch, getState) => {
   }
 };
 
-// Set visible layers by id
-const setVisibleLayers = visibleLayersIds => (dispatch, getState) => {
-  const state = getState();
-
-  // Check if map is already defined
-  if (!(state.keplerGl
-      && state.keplerGl.map
-      && state.keplerGl.map.visState
-      && state.keplerGl.map.visState.layers)) {
-    return dispatch(noop());
-  }
-
-  const {
-    keplerGl: {
-      map: {
-        visState: {
-          layers,
-        },
-      },
-    },
-  } = state;
-
-  const allUniqueVisibleLayers = new Set(visibleLayersIds);
-
-  layers.forEach((layer) => {
-    const isVisible = allUniqueVisibleLayers.has(layer.id);
-    dispatch(layerConfigChange(layer, { isVisible }));
-  });
-
-  return dispatch(noop());
-};
-
 // Enable builder mode
 const enableBuilderMode = () => dispatch => dispatch(updateVisData({}, { readOnly: false }, {}));
 
 export {
   onCountrySelect,
   onCountryClick,
+  onAdminSelect,
+  onAdminClick,
   fetchData,
   fetchingData,
   fetchedData,

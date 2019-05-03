@@ -5,7 +5,7 @@ import { onLayerClick } from 'kepler.gl/actions';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import PropTypes from 'prop-types';
 import withReducer from '../helpers/with-reducer';
-
+import { onCountryClick, onAdminClick } from '../actions';
 /**
  * This reducer is placed here to be able to load it dinamically
  * alongside with kepler.gl
@@ -41,7 +41,6 @@ class Map extends Component {
     const {
       store,
       mapboxToken,
-      onCountryClick,
     } = this.props;
 
     return (
@@ -63,13 +62,14 @@ class Map extends Component {
 
 Map.defaultProps = {
   onCountryClick: null,
+  onAdminClick: null,
 };
 
 Map.propTypes = {
   store: PropTypes.shape({}).isRequired,
   mapboxToken: PropTypes.string.isRequired,
   onCountryClick: PropTypes.func,
+  onAdminClick: PropTypes.func,
   onLoad: PropTypes.func.isRequired,
 };
-
 export default withReducer('keplerGl', customKeplerGlReducer)(Map);

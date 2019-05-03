@@ -34,6 +34,15 @@ export const countrySelectUpdater = (state, action) => ({
   },
 });
 
+// Return admin state
+export const adminSelectUpdater = (state, action) => ({
+  ...state, 
+  date: {
+    ...state.data,
+
+  }
+})
+
 // Update ui and data to new selected dataset/path
 export const fetchDataUpdater = (state, action) => ({
   ...state,
@@ -115,6 +124,7 @@ export const toggleDataInfoUpdater = state => ({
 
 export default {
   [ActionTypes.COUNTRY_SELECT]: countrySelectUpdater,
+  [ActionTypes.ADMIN_SELECT]: adminSelectUpdater,
   [ActionTypes.FETCH_DATA]: fetchDataUpdater,
   [ActionTypes.FETCHING_DATA]: fetchingDataUpdater,
   [ActionTypes.FETCHED_DATA]: fetchedDataUpdater,

@@ -76,7 +76,7 @@ module.exports = {
       // First, run the linter.
       // It's important to do this before Babel processes the JS.
       {
-        test: /\.(js|mjs|jsx)$/,
+        /*test: /\.(js|mjs|jsx)$/,
         enforce: 'pre',
         use: [
           {
@@ -92,7 +92,7 @@ module.exports = {
       },
       // JS and JSX loader
       // Process application JS with Babel.
-      {
+      {*/
         test: /\.jsx?$/,
         loader: 'babel-loader',
         options: {

@@ -2,6 +2,7 @@
 const ActionTypes = Object.keys({
   NOOP: null,
   COUNTRY_SELECT: null,
+  ADMIN_SELECT: null,
   FETCH_DATA: null,
   FETCHING_DATA: null,
   FETCHED_DATA: null,
