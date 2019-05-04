@@ -34,6 +34,26 @@ export const countrySelectUpdater = (state, action) => ({
   },
 });
 
+export const adminSelectUpdater = (state, action) => ({
+  ...state,
+  data: {
+    ...state.data,
+    dataset: {
+      ...state.data.dataset,
+      config: {
+        ...state.data.dataset.config,
+        config: {
+          ...state.data.dataset.config.config,
+          visState: {
+            ...state.data.dataset.config.config.visState,
+            layers: action.payload || state.data.dataset.config.config.visState.layers,
+          },
+        },
+      },
+    },
+  },
+});
+
 // Update ui and data to new selected dataset/path
 export const fetchDataUpdater = (state, action) => ({
   ...state,
@@ -115,6 +135,7 @@ export const toggleDataInfoUpdater = state => ({
 
 export default {
   [ActionTypes.COUNTRY_SELECT]: countrySelectUpdater,
+  [ActionTypes.ADMIN_SELECT]: adminSelectUpdater,
   [ActionTypes.FETCH_DATA]: fetchDataUpdater,
   [ActionTypes.FETCHING_DATA]: fetchingDataUpdater,
   [ActionTypes.FETCHED_DATA]: fetchedDataUpdater,

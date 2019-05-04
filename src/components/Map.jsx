@@ -42,6 +42,7 @@ class Map extends Component {
       store,
       mapboxToken,
       onCountryClick,
+      onAdminClick,
     } = this.props;
 
     return (
@@ -52,7 +53,7 @@ class Map extends Component {
             mapboxApiAccessToken={mapboxToken}
             height={height}
             width={width}
-            actions={{ onLayerClick: onCountryClick || onLayerClick }}
+            actions={{ onLayerClick: onCountryClick || onAdminClick || onLayerClick }}
             store={store}
           />
         )}
@@ -63,12 +64,14 @@ class Map extends Component {
 
 Map.defaultProps = {
   onCountryClick: null,
+  onAdminClick: null,
 };
 
 Map.propTypes = {
   store: PropTypes.shape({}).isRequired,
   mapboxToken: PropTypes.string.isRequired,
   onCountryClick: PropTypes.func,
+  onAdminClick: PropTypes.func,
   onLoad: PropTypes.func.isRequired,
 };
 

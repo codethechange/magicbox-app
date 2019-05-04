@@ -12,6 +12,7 @@ import ActionTypes from '../constants/action-types';
 const [
   noop,
   onCountrySelect,
+  onAdminSelect,
   fetchData,
   fetchingData,
   fetchedData,
@@ -21,6 +22,7 @@ const [
 ] = [
   ActionTypes.NOOP,
   ActionTypes.COUNTRY_SELECT,
+  ActionTypes.ADMIN_SELECT,
   ActionTypes.FETCH_DATA,
   ActionTypes.FETCHING_DATA,
   ActionTypes.FETCHED_DATA,
@@ -172,12 +174,38 @@ const setVisibleLayers = visibleLayersIds => (dispatch, getState) => {
   return dispatch(noop());
 };
 
+const onAdminClick = info => (dispatch, getState) => {
+  dispatch(onLayerClick(info));
+  if (info && info.object && info.object.properties) {
+    const state = getState();
+    const {
+      config,
+      id,
+    } = state.app.data.dataset.config.config.visState.layers[0];
+
+    const estimatedId = id;
+    const estimatedVisible = config.isVisible;
+
+    const reportedId = state.app.data.dataset.config.config.visState.layers[1].id;
+    const idToShow = estimatedVisible ? reportedId : estimatedId;
+    const newLayers = state.app.data.dataset.config.config.visState.layers;
+    const indexLayerOn = estimatedVisible ? 1 : 0;
+    newLayers[indexLayerOn].config.isVisible = true;
+    newLayers[indexLayerOn === 0 ? 1 : 0].config.isVisible = false;
+    dispatch(onAdminSelect(newLayers));
+    dispatch(setVisibleLayers([idToShow]));
+  }
+  return noop();
+};
+
 // Enable builder mode
 const enableBuilderMode = () => dispatch => dispatch(updateVisData({}, { readOnly: false }, {}));
 
 export {
   onCountrySelect,
   onCountryClick,
+  onAdminSelect,
+  onAdminClick,
   fetchData,
   fetchingData,
   fetchedData,

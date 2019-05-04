@@ -51,6 +51,7 @@ export class App extends Component {
     const {
       match: { params: { country } },
       onCountryClick,
+      onAdminClick,
       app: {
         dataInfo,
         sidePanel,
@@ -66,7 +67,8 @@ export class App extends Component {
     } = this.props;
 
     // Country click should only be available when no country is selected
-    const clickCallback = !country ? onCountryClick : null;
+    const countryClickCallback = !country ? onCountryClick : null;
+    const adminClickCallback = country ? onAdminClick : null;
     return (
       <div className="App">
         <SidePanel
@@ -89,7 +91,8 @@ export class App extends Component {
               <LazyMap
                 store={store}
                 mapboxToken={MAPBOX_TOKEN}
-                onCountryClick={clickCallback}
+                onCountryClick={countryClickCallback}
+                onAdminClick={adminClickCallback}
                 onLoad={this.setupMapAfterLoad}
               />
             </Suspense>
@@ -102,6 +105,7 @@ export class App extends Component {
 
 App.propTypes = {
   onCountryClick: PropTypes.func.isRequired,
+  onAdminClick: PropTypes.func.isRequired,
   onLoadMap: PropTypes.func.isRequired,
   match: PropTypes.shape({}).isRequired,
   history: PropTypes.shape({}).isRequired,
@@ -117,6 +121,7 @@ const mapStateToProps = state => state;
 const mapDispatchToProps = dispatch => ({
   dispatch,
   onCountryClick: info => dispatch(Actions.onCountryClick(info)),
+  onAdminClick: info => dispatch(Actions.onAdminClick(info)),
   onLoadMap: (dataset, path) => dispatch(Actions.loadDataToMap(dataset, path)),
   enableBuilderMode: () => dispatch(Actions.enableBuilderMode()),
   toggleSidePanel: () => dispatch(Actions.toggleSidePanel()),
